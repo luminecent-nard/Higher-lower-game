@@ -15,7 +15,6 @@ def int_check(question, low=None, high=None, exit_code=None):
         error = (f"Please enter an integer that"
                  f" is between {low} and {high} (inclusive)")
 
-
     while True:
         response = input(question).lower()
 
@@ -37,7 +36,6 @@ def int_check(question, low=None, high=None, exit_code=None):
             #if response is valid return it
             else:
                 return response
-
 
         except ValueError:
             print(error)
@@ -64,5 +62,3 @@ while guess != "xxx":
     guess = int_check("guess: ", low=0, high=10, exit_code="xxx")
     print(f"you guessed {guess}")
     print()
-
-
