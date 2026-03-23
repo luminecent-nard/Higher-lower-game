@@ -82,20 +82,14 @@ while guess != secret and guesses_used < guesses_allowed:
     else:
         already_guessed.append(guess)
 
-
-
     #add 1 to the number of guesses used
     guesses_used += 1
 
     #compare users guess with secret number
-    # guess == secret and guesses_used < guesses_allowed:
-    #     feedback = ("You got it! ")
-
-
     if guess == secret:
         if guesses_used == 1:
             feedback = "Pure skill"
-
+        #variable responses for different scenarios
         elif guesses_used == guesses_allowed:
             feedback = f"lucky, you used all {guesses_allowed} guesses"
 
@@ -106,21 +100,26 @@ while guess != secret and guesses_used < guesses_allowed:
         print(feedback)
         break
 
+    #warns the player if they have only one guess left
     if guesses_used == guesses_allowed - 1:
         warning_display = "true"
 
+    #tells the user to guess higher
     if guess < secret and guesses_used < guesses_allowed:
         feedback = (f"Higher! "
                     f"you've used {guesses_used} / {guesses_allowed}")
 
+    #tells the user that they need to guess lower
     elif guess > secret and guesses_used < guesses_allowed:
         feedback = (f"Lower! "
                     f"you've used {guesses_used} / {guesses_allowed}")
 
+    #out of guesses
     else:
         feedback = ("Out of guesses \n"
                     "better luck next time!")
 
+    #display feedback
     print()
     print(feedback)
     if warning_display == "true":
