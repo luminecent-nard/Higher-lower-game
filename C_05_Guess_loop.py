@@ -64,7 +64,14 @@ warning_display = "false"
 while guess != secret and guesses_used < guesses_allowed:
 
     #ask the user to guess the number
-    guess = int_check("guess: ", low_num, high_num)
+    guess = int_check("Guess: ", low_num, high_num, "xxx")
+
+    #check for exit code
+    if guess == "xxx":
+        print("See ya later!")
+        #set up end game to use for outer loop
+        end_game = "yes"
+        break
 
     #check that the guess is not a duplicate
     if guess in already_guessed:
@@ -75,11 +82,7 @@ while guess != secret and guesses_used < guesses_allowed:
     else:
         already_guessed.append(guess)
 
-    #check for exit code
-    if guess == "xxx":
-        #set up end game to use for outer loop
-        end_game = "yes"
-        break
+
 
     #add 1 to the number of guesses used
     guesses_used += 1
@@ -90,7 +93,16 @@ while guess != secret and guesses_used < guesses_allowed:
 
 
     if guess == secret:
-        feedback = f"you got it in {guesses_used} guesses"
+        if guesses_used == 1:
+            feedback = "Pure skill"
+
+        elif guesses_used == guesses_allowed:
+            feedback = f"lucky, you used all {guesses_allowed} guesses"
+
+        else:
+            feedback = f"You got it in {guesses_used} guesses"
+
+        print()
         print(feedback)
         break
 
@@ -109,6 +121,7 @@ while guess != secret and guesses_used < guesses_allowed:
         feedback = ("Out of guesses \n"
                     "better luck next time!")
 
+    print()
     print(feedback)
     if warning_display == "true":
         print(warning)
