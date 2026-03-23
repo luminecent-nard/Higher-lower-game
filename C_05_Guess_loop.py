@@ -56,8 +56,11 @@ guesses_allowed = 5
 #set guesses to 0 at the start of each round
 guesses_used = 0
 already_guessed = []
+warning = f"\nCareful, you only have one guess left!\n"
 
+feedback = ""
 guess = ""
+warning_display = "false"
 while guess != secret and guesses_used < guesses_allowed:
 
     #ask the user to guess the number
@@ -84,15 +87,29 @@ while guess != secret and guesses_used < guesses_allowed:
     #compare users guess with secret number
     # guess == secret and guesses_used < guesses_allowed:
     #     feedback = ("You got it! ")
+
+
     if guess == secret:
         feedback = f"you got it in {guesses_used} guesses"
+        print(feedback)
+        break
 
-    elif guess < secret and guesses_used < guesses_allowed:
+    if guesses_used == guesses_allowed - 1:
+        warning_display = "true"
+
+    if guess < secret and guesses_used < guesses_allowed:
         feedback = (f"Higher! "
                     f"you've used {guesses_used} / {guesses_allowed}")
-    else:
+
+    elif guess > secret and guesses_used < guesses_allowed:
         feedback = (f"Lower! "
                     f"you've used {guesses_used} / {guesses_allowed}")
 
-    print(feedback)
+    else:
+        feedback = ("Out of guesses \n"
+                    "better luck next time!")
 
+    print(feedback)
+    if warning_display == "true":
+        print(warning)
+        warning_display = "false"
