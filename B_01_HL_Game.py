@@ -163,9 +163,6 @@ while rounds_played < num_rounds:
 
     while guess != secret and guesses_used < guesses_allowed:
 
-        #cheating for test plan
-        print("secret number (testing)", secret)
-
         # ask the user to guess the number
         guess = int_check("Guess: ", low_num, high_num, "xxx")
 
