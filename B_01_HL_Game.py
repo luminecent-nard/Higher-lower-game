@@ -96,7 +96,10 @@ good luck.
 #main routine
 
 #int game variables
-end_game = ""
+success = ""
+end_game = "no"
+game_history = []
+all_scores = []
 mode = "regular"
 rounds_played = 0
 already_guessed = []
@@ -117,18 +120,25 @@ if want_instructions == "yes":
     instructions()
 
 #ask user for number of rounds / infinite mode
-num_rounds = int_check("How many rounds do you want to play (press <enter> for infinite): ",
+num_rounds = int_check("\nHow many rounds do you want to play (press <enter> for infinite): ",
                        low=1,exit_code="")
 
 if num_rounds == "":
     mode = "infinite"
     num_rounds = 5
 
-#get game parameters
-low_num = int_check("Low number? ")
-high_num = int_check("High number? ", low=low_num+1)
-guesses_allowed = calc_guesses(low_num, high_num)
+#check if user wants the default mode
+game_mode = string_checker("\nwould you like to use the default game mode? ")
 
+if game_mode == "no":
+    print("\nchoose the lowest and highest number\n")
+    low_num = int_check("Low number? ")
+    high_num = int_check("High number? ", low=low_num+1)
+    guesses_allowed = calc_guesses(low_num, high_num)
+else:
+    low_num = 1
+    high_num = 100
+    guesses_allowed = calc_guesses(low_num, high_num)
 #display amount of guesses
 print()
 print(f"You get {guesses_allowed} guesses")
@@ -153,12 +163,15 @@ while rounds_played < num_rounds:
 
     while guess != secret and guesses_used < guesses_allowed:
 
+        #cheating for test plan
+        print("secret number (testing)", secret)
+
         # ask the user to guess the number
         guess = int_check("Guess: ", low_num, high_num, "xxx")
 
         # check for exit code
         if guess == "xxx":
-            print("See ya later!")
+            feedback = ""
             # set up end game to use for outer loop
             end_game = "yes"
             break
@@ -177,6 +190,7 @@ while rounds_played < num_rounds:
 
         # compare users guess with secret number
         if guess == secret:
+            success = "got"
             if guesses_used == 1:
                 feedback = "Pure skill"
             # variable responses for different scenarios
@@ -206,9 +220,11 @@ while rounds_played < num_rounds:
 
         # out of guesses
         else:
-            feedback = ("Out of guesses \n"
-                        "better luck next time!")
-
+            feedback = ("Out of guesses"
+                        " better luck next time!")
+            success = "didn't get"
+            #penalise the user by adding one to their score (guesses used)
+            guesses_used += 1
         # display feedback
         print()
         print(feedback)
@@ -216,8 +232,16 @@ while rounds_played < num_rounds:
             print(warning)
             warning_display = "false"
         print()
-    #if users are in infinite mode increase number of rounds
 
+
+    if end_game == "yes":
+        break
+
+    #append game history
+    round_feedback = f"the secret number was: {secret}, you {success} it, {feedback}"
+    history_item = f"round: {rounds_played + 1} - {round_feedback}"
+    game_history.append(history_item)
+    all_scores.append(guesses_used)
     #round progression
     rounds_played += 1
 
@@ -225,9 +249,32 @@ while rounds_played < num_rounds:
     if mode == "infinite":
         num_rounds += 1
 
-    if end_game == "yes":
-        break
 
 #game loop ends here
-print("end of game")
-#game history / stats
+
+#crash prevention
+if rounds_played > 0:
+    #game history / stats
+
+    #stats
+    all_scores.sort()
+    average_score = sum(all_scores) / len(all_scores)
+    lowest_score = all_scores[0]
+    highest_score = all_scores[-1]
+    print()
+    print(f"best score:{lowest_score}\t| worst score:{highest_score}\t| Average score:{average_score:.2f}")
+    print()
+
+
+
+    #history
+    want_history = string_checker("\ndo you want to see the game history? ")
+
+    if want_history == "yes":
+        print()
+        make_statement("Game history", "*")
+        print()
+        for item in game_history:
+            print(item)
+else:
+    print("you chicken")
